@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: darkblue;
+        }
+
+        p {
+            color: red;
+            margin-top: 10px;
+        }
+
+        #dashboard {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Tela de Login -->
+    <div class="container" id="login">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Senha" required>
+            <button type="submit">Entrar</button>
+        </form>
+        <p id="message"></p>
+    </div>
+
+    <!-- Tela do Dashboard -->
+    <div class="container" id="dashboard">
+        <h1>Usuários</h1>
+        <button id="logout">Sair</button>
+        <ul id="user-list"></ul>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const loginForm = document.getElementById("loginForm");
+            const userList = document.getElementById("user-list");
+            const logoutButton = document.getElementById("logout");
+            const message = document.getElementById("message");
+            const loginDiv = document.getElementById("login");
+            const dashboardDiv = document.getElementById("dashboard");
+
+            // Simulação de login (Usuário fixo)
+            const userData = { email: "admin@email.com", password: "1234" };
+
+            // Verifica se já está logado
+            const token = localStorage.getItem("token");
+            if (token) {
+                showDashboard();
+            }
+
+            // LOGIN
+            if (loginForm) {
+                loginForm.addEventListener("submit", function (event) {
+                    event.preventDefault();
+
+                    const email = document.getElementById("email").value;
+                    const password = document.getElementById("password").value;
+
+                    if (email === userData.email && password === userData.password) {
+                        localStorage.setItem("token", "meuToken123");
+                        showDashboard();
+                    } else {
+                        message.textContent = "Email ou senha inválidos.";
+                    }
+                });
+            }
+
+            // LOGOUT
+            if (logoutButton) {
+                logoutButton.addEventListener("click", function () {
+                    localStorage.removeItem("token");
+                    showLogin();
+                });
+            }
+
+            // EXIBIR USUÁRIOS
+            function loadUsers() {
+                const fakeUsers = [
+                    { id: 1, name: "João", role: "Admin" },
+                    { id: 2, name: "Maria", role: "Usuário" },
+                    { id: 3, name: "Carlos", role: "Editor" }
+                ];
+
+                userList.innerHTML = "";
+                fakeUsers.forEach(user => {
+                    const li = document.createElement("li");
+                    li.textContent = `${user.name} (${user.role})`;
+                    userList.appendChild(li);
+                });
+            }
+
+            // MOSTRAR LOGIN
+            function showLogin() {
+                loginDiv.style.display = "block";
+                dashboardDiv.style.display = "none";
+            }
+
+            // MOSTRAR DASHBOARD
+            function showDashboard() {
+                loginDiv.style.display = "none";
+                dashboardDiv.style.display = "block";
+                loadUsers();
+            }
+        });
+    </script>
+
+</body>
+</html>
